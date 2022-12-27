@@ -34,7 +34,7 @@ const subscribe = controller => {
   const identifier = JSON.stringify(request)
 
   subscription =
-    consumer.subscriptions.findAll(identifier)[0] ||
+    _findSubscription(consumer.subscriptions, identifier) ||
     consumer.subscriptions.create(request, {
       received,
       connected,
@@ -90,6 +90,14 @@ const connectionStatusClass = () => {
     list.replace('stimulus-reflex-disconnected', 'stimulus-reflex-connected')
   } else {
     list.replace('stimulus-reflex-connected', 'stimulus-reflex-disconnected')
+  }
+}
+
+const _findSubscription = (subscriptions, id) => {
+  if (subscriptions.get) {
+    return subscriptions.get(id)
+  } else {
+    return subscriptions.findAll(id)[0]
   }
 }
 
